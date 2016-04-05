@@ -5,7 +5,6 @@
 #include "cocos2d.h"
 #include "CCEventListenerAcceleration.h"
 #include "CCEventAcceleration.h"
-#import <list>
 // #include ""
 
 // using namespace cocos2d;
@@ -17,13 +16,15 @@ public:
     int gameTime = 0;
 
     virtual bool init();
-    
+  
+
     // setup touchscreen
     virtual bool onTouchBegan(cocos2d::Touch*, cocos2d::Event*);
     // virtual void onTouchEnded(cocos2d::Touch*, cocos2d::Event*);
     // virtual void onTouchMoved(cocos2d::Touch*, cocos2d::Event*);
     // virtual void onTouchCancelled(cocos2d::Touch*, cocos2d::Event*);
 
+    void addFirst(float dt);
 
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
@@ -39,6 +40,8 @@ public:
 
 	bool onContactBegan(cocos2d::PhysicsContact &contact);
 
+	// void update(float dt);
+
 private:
 	cocos2d::Label *label;
 	cocos2d::Sprite *spaceship;	
@@ -47,6 +50,7 @@ private:
 	cocos2d::Sprite *monster3;
 	cocos2d::Sprite *monster4;
 	cocos2d::Sprite *monster5;
+	cocos2d::Vector<cocos2d::Sprite*> _m5List;
 
 
 	int _nextShipLaser;

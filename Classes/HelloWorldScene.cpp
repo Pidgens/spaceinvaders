@@ -42,7 +42,6 @@ bool HelloWorld::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     
-    
     label = Label::createWithSystemFont("SCORE: ", "fonts/Marker Felt.ttf", 12);
     
     // position the label on the center of the screen
@@ -52,11 +51,11 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label);
 
-    // game logic for monsters
-    this->schedule(schedule_selector(HelloWorld::row1Shoot), 1.5);
+
+    #define PERROW 11
 
     // create monsters
-    for (int i=0; i<11; ++i) 
+    for (int i=0; i<PERROW; ++i) 
     {
         if (i < 11) {
             monster1 = Sprite::create("invaderCframe1.png");
@@ -73,7 +72,7 @@ bool HelloWorld::init()
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster1->setPhysicsBody(physicsBody);
     }
-    for (int i=0; i<11; ++i)
+    for (int i=0; i<PERROW; ++i)
     {
 
         float height = 1.3;
@@ -92,7 +91,7 @@ bool HelloWorld::init()
         monster2->setPhysicsBody(physicsBody2);
     }
 
-    for (int i=0; i<11; ++i)
+    for (int i=0; i<PERROW; ++i)
     {
         
         float height = 1.4;
@@ -111,7 +110,7 @@ bool HelloWorld::init()
         monster3->setPhysicsBody(physicsBody);
     }
 
-    for (int i=0; i<11; ++i)
+    for (int i=0; i<PERROW; ++i)
     {
         
         float height = 1.5;
@@ -129,8 +128,8 @@ bool HelloWorld::init()
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster4->setPhysicsBody(physicsBody);
     }
-
-    for (int i=0; i<11; ++i)
+    // cocos2d::Vector<cocos2d::Sprite*> _m5List(PERROW);
+    for (int i=0; i<PERROW; ++i)
     {
         
         float height = 1.6;
@@ -147,7 +146,11 @@ bool HelloWorld::init()
         physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster5->setPhysicsBody(physicsBody);
+
+        _m5List.insert(i, monster5);
     }
+
+    // game logic for monsters
 
 
 
@@ -181,6 +184,7 @@ bool HelloWorld::init()
 
     // add the sprite as a child to this layer
     this->addChild(spaceship, 1);
+
 
 
 
@@ -219,6 +223,9 @@ bool HelloWorld::init()
     contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegan, this);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+    CCLOG("%d", _m5List.size());
+    this->schedule(schedule_selector(HelloWorld::row1Shoot), 2); 
+
     return true;
 }
 
@@ -229,22 +236,32 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
 
     nodeA->removeFromParent();
     nodeB->removeFromParent();
+    CCLOG("COLLISION OCCURED");
     return true;
 }   
 
-void HelloWorld::OnAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event) 
-{
-    spaceship->setPosition(spaceship->getPosition().x + acc->x * 4, spaceship->getPosition().y);
-}
-
-
-// void HelloWorld::setInvisible(CCNode * node) {
-//     node->setVisible(false);
-// }
-
 void HelloWorld::row1Shoot(float dt)
 {
-    
+    // _m5List.insert(0, monster5);
+    CCLOG("%d", _m5List.size());
+    for (auto &m5 : _m5List)
+    {
+        // CCLOG("RUN222");
+        auto moveTo = MoveTo::create(2, Vec2(m5->getPosition().x + 5 , m5->getPosition().y));
+        m5->runAction(moveTo);
+    }
+}
+
+void HelloWorld::OnAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event) 
+{
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    int edgeX = visibleSize.width/2 + origin.x;
+    CCLOG("%d", edgeX);
+    if (spaceship->getPosition().x + acc->x * 4 < 300) 
+    { 
+        spaceship->setPosition(spaceship->getPosition().x + acc->x * 4, spaceship->getPosition().y);
+    }
 }
 
 bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event) 
