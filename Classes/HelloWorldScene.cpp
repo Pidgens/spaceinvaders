@@ -71,6 +71,8 @@ bool HelloWorld::init()
         physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster1->setPhysicsBody(physicsBody);
+
+        _m1List.insert(i, monster1);
     }
     for (int i=0; i<PERROW; ++i)
     {
@@ -89,6 +91,8 @@ bool HelloWorld::init()
         physicsBody2->setCollisionBitmask((int)PhysicsCategory::None);
         physicsBody2->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster2->setPhysicsBody(physicsBody2);
+
+        _m2List.insert(i, monster2);
     }
 
     for (int i=0; i<PERROW; ++i)
@@ -108,6 +112,8 @@ bool HelloWorld::init()
         physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster3->setPhysicsBody(physicsBody);
+
+        _m3List.insert(i, monster3);
     }
 
     for (int i=0; i<PERROW; ++i)
@@ -127,6 +133,8 @@ bool HelloWorld::init()
         physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
         physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
         monster4->setPhysicsBody(physicsBody);
+
+        _m4List.insert(i, monster4);
     }
     // cocos2d::Vector<cocos2d::Sprite*> _m5List(PERROW);
     for (int i=0; i<PERROW; ++i)
@@ -149,9 +157,6 @@ bool HelloWorld::init()
 
         _m5List.insert(i, monster5);
     }
-
-    // game logic for monsters
-
 
 
     // create player_shields
@@ -246,19 +251,44 @@ void HelloWorld::row1Shoot(float dt)
     CCLOG("%d", _m5List.size());
     for (auto &m5 : _m5List)
     {
+        int nextPosition = m5->getPosition().x + 5;
+        
         // CCLOG("RUN222");
+        if ( (m5->getPosition().x + 5  ))
         auto moveTo = MoveTo::create(2, Vec2(m5->getPosition().x + 5 , m5->getPosition().y));
         m5->runAction(moveTo);
     }
+
+    // for (auto &m4 : _m4List) 
+    // {
+    //     auto moveTo = MoveTo::create(2, Vec2(m4->getPosition().x + 5 , m4->getPosition().y));
+    //     m4->runAction(moveTo);
+    // }
+    // for (auto &m3 : _m3List) 
+    // {
+    //     auto moveTo = MoveTo::create(2, Vec2(m3->getPosition().x + 5 , m3->getPosition().y));
+    //     m3->runAction(moveTo);
+    // }
+    // for (auto &m2 : _m2List) 
+    // {
+    //     auto moveTo = MoveTo::create(2, Vec2(m2->getPosition().x + 5 , m2->getPosition().y));
+    //     m2->runAction(moveTo);
+    // }
+    // for (auto &m1 : _m1List) 
+    // {
+    //     auto moveTo = MoveTo::create(2, Vec2(m1->getPosition().x + 5 , m1->getPosition().y));
+    //     m1->runAction(moveTo);
+    // }
 }
 
 void HelloWorld::OnAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event) 
 {
+    int nextPosition = spaceship->getPosition().x + acc->x * 4;
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    int edgeX = visibleSize.width/2 + origin.x;
-    CCLOG("%d", edgeX);
-    if (spaceship->getPosition().x + acc->x * 4 < 300) 
+    int maxEdgeX = visibleSize.width + origin.x;
+    int minEdgeX = origin.x;
+    if ( (nextPosition < maxEdgeX) & (nextPosition > minEdgeX) )
     { 
         spaceship->setPosition(spaceship->getPosition().x + acc->x * 4, spaceship->getPosition().y);
     }

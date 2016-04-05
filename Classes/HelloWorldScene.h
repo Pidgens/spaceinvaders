@@ -51,7 +51,10 @@ private:
 	cocos2d::Sprite *monster4;
 	cocos2d::Sprite *monster5;
 	cocos2d::Vector<cocos2d::Sprite*> _m5List;
-
+	cocos2d::Vector<cocos2d::Sprite*> _m4List;
+	cocos2d::Vector<cocos2d::Sprite*> _m3List;
+	cocos2d::Vector<cocos2d::Sprite*> _m2List;
+	cocos2d::Vector<cocos2d::Sprite*> _m1List;
 
 	int _nextShipLaser;
 
