@@ -30,7 +30,7 @@ Scene* HelloWorld::createScene()
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2(0,0));
-    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
@@ -316,9 +316,6 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
         this->removeChildByTag(nodeB->getTag());
         
     }
-
-
-
     nodeA->removeFromParentAndCleanup(true);
     nodeB->removeFromParentAndCleanup(true);
 
@@ -335,23 +332,30 @@ void HelloWorld::fireMissiles(float dt)
     {
         if (randVal == i) 
         {
-            auto projectile = Sprite::create("enemy_missle.png");
-            projectile->setPosition(m->getPosition());
-            this->addChild(projectile);
+            if ( getChildByTag(m->getTag()) ) 
+            {
+                auto projectile = Sprite::create("enemy_missle.png");
+                projectile->setPosition(m->getPosition());
+                this->addChild(projectile);
 
-            auto realDest = Vec2(m->getPosition().x, -300);
+                auto realDest = Vec2(m->getPosition().x, -500);
 
-            auto projectileSize = projectile->getContentSize();
-            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
-            physicsBody->setDynamic(true); 
-            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
-            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
-            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
-            projectile->setPhysicsBody(physicsBody);
+                auto projectileSize = projectile->getContentSize();
+                auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+                physicsBody->setDynamic(true); 
+                physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
+                physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+                physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+                projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(6.0f, realDest);
-            auto actionRemove = RemoveSelf::create();
-            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+                auto actionMove = MoveTo::create(6.0f, realDest);
+                auto actionRemove = RemoveSelf::create();
+                projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));                   
+            }
+            else 
+            {
+                CCLOG("ADSJKADHKSHADJKSHKJDSAKD");
+            }
         }
         ++i;
     }
@@ -361,23 +365,27 @@ void HelloWorld::fireMissiles(float dt)
     {
         if (randVal == i) 
         {
-            auto projectile = Sprite::create("enemy_missle.png");
-            projectile->setPosition(m->getPosition());
-            this->addChild(projectile);
+            if ( getChildByTag(m->getTag()) ) 
+            {
 
-            auto realDest = Vec2(m->getPosition().x, -500);
+                auto projectile = Sprite::create("enemy_missle.png");
+                projectile->setPosition(m->getPosition());
+                this->addChild(projectile);
 
-            auto projectileSize = projectile->getContentSize();
-            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
-            physicsBody->setDynamic(true); 
-            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
-            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
-            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
-            projectile->setPhysicsBody(physicsBody);
+                auto realDest = Vec2(m->getPosition().x, -500);
 
-            auto actionMove = MoveTo::create(6.0f, realDest);
-            auto actionRemove = RemoveSelf::create();
-            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+                auto projectileSize = projectile->getContentSize();
+                auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+                physicsBody->setDynamic(true); 
+                physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
+                physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+                physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+                projectile->setPhysicsBody(physicsBody);
+
+                auto actionMove = MoveTo::create(6.0f, realDest);
+                auto actionRemove = RemoveSelf::create();
+                projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+            }
         }
         ++i;
     }
@@ -387,23 +395,26 @@ void HelloWorld::fireMissiles(float dt)
     {
         if (randVal == i) 
         {
-            auto projectile = Sprite::create("enemy_missle.png");
-            projectile->setPosition(m->getPosition());
-            this->addChild(projectile);
+            if ( getChildByTag(m->getTag()) ) 
+            {
+                auto projectile = Sprite::create("enemy_missle.png");
+                projectile->setPosition(m->getPosition());
+                this->addChild(projectile);
 
-            auto realDest = Vec2(m->getPosition().x, -500);
+                auto realDest = Vec2(m->getPosition().x, -500);
 
-            auto projectileSize = projectile->getContentSize();
-            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
-            physicsBody->setDynamic(true); 
-            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
-            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
-            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
-            projectile->setPhysicsBody(physicsBody);
+                auto projectileSize = projectile->getContentSize();
+                auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+                physicsBody->setDynamic(true); 
+                physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
+                physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+                physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+                projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(6.0f, realDest);
-            auto actionRemove = RemoveSelf::create();
-            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+                auto actionMove = MoveTo::create(6.0f, realDest);
+                auto actionRemove = RemoveSelf::create();
+                projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+            }
         }
         ++i;
     }
@@ -413,23 +424,26 @@ void HelloWorld::fireMissiles(float dt)
     {
         if (randVal == i) 
         {
-            auto projectile = Sprite::create("enemy_missle.png");
-            projectile->setPosition(m->getPosition());
-            this->addChild(projectile);
+            if ( getChildByTag(m->getTag()) ) 
+            {
+                auto projectile = Sprite::create("enemy_missle.png");
+                projectile->setPosition(m->getPosition());
+                this->addChild(projectile);
 
-            auto realDest = Vec2(m->getPosition().x, -500);
+                auto realDest = Vec2(m->getPosition().x, -500);
 
-            auto projectileSize = projectile->getContentSize();
-            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
-            physicsBody->setDynamic(true); 
-            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
-            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
-            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
-            projectile->setPhysicsBody(physicsBody);
+                auto projectileSize = projectile->getContentSize();
+                auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+                physicsBody->setDynamic(true); 
+                physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile | (int) PhysicsCategoryShield:: Projectile);
+                physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+                physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+                projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(6.0f, realDest);
-            auto actionRemove = RemoveSelf::create();
-            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+                auto actionMove = MoveTo::create(6.0f, realDest);
+                auto actionRemove = RemoveSelf::create();
+                projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+            }
         }
         ++i;
     }
@@ -439,6 +453,8 @@ void HelloWorld::fireMissiles(float dt)
     {
         if (randVal == i) 
         {
+            if ( getChildByTag(m->getTag()) ) 
+            {
             auto projectile = Sprite::create("enemy_missle.png");
             projectile->setPosition(m->getPosition());
             this->addChild(projectile);
@@ -456,6 +472,7 @@ void HelloWorld::fireMissiles(float dt)
             auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+            }
         }
         ++i;
     }
@@ -475,36 +492,40 @@ void HelloWorld::row1Move(float dt)
     }
     for (auto &m : _m1List)
     {
-        if (altFrames1 % 2 == 1)
+        if ( getChildByTag(m->getTag()) ) 
         {
-            m->setTexture("invaderCframe2.png");
-        } 
-        else 
-        {
-            m->setTexture("invaderCframe1.png");    
-        }
-        auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction1 , m->getPosition().y));
-        m->runAction(moveTo);
-        int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction1;
-        if ( nextPosition > maxEdgeX ) {
-            direction1 = -1;
-            for ( auto &m : _m1List )
+
+            if (altFrames1 % 2 == 1)
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 10 ));
-                m->runAction(moveDown);   
-            }
-            _m1List.reverse();
-            break;
-        } 
-        if ( nextPosition < minEdgeX ) {
-            direction1 = 1;
-            for ( auto &m : _m1List )
+                m->setTexture("invaderCframe2.png");
+            } 
+            else 
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
+                m->setTexture("invaderCframe1.png");    
             }
-            _m1List.reverse();
-            break;
+            auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction1 , m->getPosition().y));
+            m->runAction(moveTo);
+            int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction1;
+            if ( nextPosition > maxEdgeX ) {
+                direction1 = -1;
+                for ( auto &m : _m1List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 10 ));
+                    m->runAction(moveDown);   
+                }
+                _m1List.reverse();
+                break;
+            } 
+            if ( nextPosition < minEdgeX ) {
+                direction1 = 1;
+                for ( auto &m : _m1List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m1List.reverse();
+                break;
+            }
         }
     }
     ++altFrames1;
@@ -522,36 +543,40 @@ void HelloWorld::row2Move(float dt)
     }
     for (auto &m : _m2List)
     {
-        if (altFrames2 % 2 == 1)
+        if ( getChildByTag(m->getTag()) ) 
         {
-            m->setTexture("invaderAframe2.png");
-        } 
-        else 
-        {
-            m->setTexture("invaderAframe1.png");    
-        }
-        auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction2 , m->getPosition().y));
-        m->runAction(moveTo);
-        int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction2;
-        if ( nextPosition > maxEdgeX ) {
-            direction2 = -1;
-            for ( auto &m : _m2List )
+
+            if (altFrames2 % 2 == 1)
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
-            }
-            _m2List.reverse();
-            break;
-        } 
-        if ( nextPosition < minEdgeX ) {
-            direction2 = 1;
-            for ( auto &m : _m2List )
+                m->setTexture("invaderAframe2.png");
+            } 
+            else 
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
+                m->setTexture("invaderAframe1.png");    
             }
-            _m2List.reverse();
-            break;
+            auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction2 , m->getPosition().y));
+            m->runAction(moveTo);
+            int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction2;
+            if ( nextPosition > maxEdgeX ) {
+                direction2 = -1;
+                for ( auto &m : _m2List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m2List.reverse();
+                break;
+            } 
+            if ( nextPosition < minEdgeX ) {
+                direction2 = 1;
+                for ( auto &m : _m2List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m2List.reverse();
+                break;
+            }
         }
     }
     ++altFrames2;
@@ -568,36 +593,40 @@ void HelloWorld::row3Move(float dt)
     }
     for (auto &m : _m3List)
     {
-        if (altFrames3 % 2 == 1)
+        if ( getChildByTag(m->getTag()) ) 
         {
-            m->setTexture("invaderAframe2.png");
-        } 
-        else 
-        {
-            m->setTexture("invaderAframe1.png");    
-        }
-        auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction3 , m->getPosition().y));
-        m->runAction(moveTo);
-        int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction3;
-        if ( nextPosition > maxEdgeX ) {
-            direction3 = -1;
-            for ( auto &m : _m3List )
+
+            if (altFrames3 % 2 == 1)
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
-            }
-            _m3List.reverse();
-            break;
-        } 
-        if ( nextPosition < minEdgeX ) {
-            direction3 = 1;
-            for ( auto &m : _m3List )
+                m->setTexture("invaderAframe2.png");
+            } 
+            else 
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
+                m->setTexture("invaderAframe1.png");    
             }
-            _m3List.reverse();
-            break;
+            auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction3 , m->getPosition().y));
+            m->runAction(moveTo);
+            int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction3;
+            if ( nextPosition > maxEdgeX ) {
+                direction3 = -1;
+                for ( auto &m : _m3List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m3List.reverse();
+                break;
+            } 
+            if ( nextPosition < minEdgeX ) {
+                direction3 = 1;
+                for ( auto &m : _m3List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m3List.reverse();
+                break;
+            }
         }
     }
     ++altFrames3;
@@ -616,37 +645,40 @@ void HelloWorld::row4Move(float dt)
     }
     for (auto &m : _m4List)
     {
-        auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction4 , m->getPosition().y));
-        m->runAction(moveTo);
-        if (altFrames4 % 2 == 1)
+        if ( getChildByTag(m->getTag()) ) 
         {
-            m->setTexture("invaderBframe2.png");
-        } 
-        else 
-        {
-            m->setTexture("invaderBframe1.png");    
-        }
-        int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction4;
-        if ( nextPosition > maxEdgeX ) {
-            direction4 = -1;
-            for ( auto &m : _m4List )
+            if (altFrames4 % 2 == 1)
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
+                m->setTexture("invaderBframe2.png");
+            } 
+            else 
+            {
+                m->setTexture("invaderBframe1.png");    
             }
+            auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction4 , m->getPosition().y));
+            m->runAction(moveTo);
+            int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction4;
+            if ( nextPosition > maxEdgeX ) {
+                direction4 = -1;
+                for ( auto &m : _m4List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
 
-            _m4List.reverse();
-            break;
-        } 
-        if ( nextPosition < minEdgeX ) {
-            direction4 = 1;
-            for ( auto &m : _m4List )
-            {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
+                _m4List.reverse();
+                break;
+            } 
+            if ( nextPosition < minEdgeX ) {
+                direction4 = 1;
+                for ( auto &m : _m4List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m4List.reverse();
+                break;
             }
-            _m4List.reverse();
-            break;
         }
     }
     ++altFrames4;
@@ -665,36 +697,40 @@ void HelloWorld::row5Move(float dt)
     }
     for (auto &m5 : _m5List)
     {
-        auto moveTo = MoveTo::create(1, Vec2(m5->getPosition().x + 10 * direction5 , m5->getPosition().y));
-        m5->runAction(moveTo);
-        if (altFrames5 % 2 == 1)
+        if ( getChildByTag(m5->getTag()) ) 
         {
-            m5->setTexture("invaderBframe2.png");
-        } 
-        else 
-        {
-            m5->setTexture("invaderBframe1.png");    
-        }
-        int nextPosition = m5->getPosition().x + (10 + m5->getContentSize().width) * direction5;
-        if ( nextPosition > maxEdgeX ) {
-            direction5 = -1;
-            for ( auto &m : _m5List )
+
+            if (altFrames5 % 2 == 1)
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);   
-            }
-            _m5List.reverse();
-            break;
-        } 
-        if ( nextPosition < minEdgeX ) {
-            direction5 = 1;
-            for ( auto &m : _m5List )
+                m5->setTexture("invaderBframe2.png");
+            } 
+            else 
             {
-                auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                m->runAction(moveDown);
+                m5->setTexture("invaderBframe1.png");    
             }
-            _m5List.reverse();
-            break;
+            auto moveTo = MoveTo::create(1, Vec2(m5->getPosition().x + 10 * direction5 , m5->getPosition().y));
+            m5->runAction(moveTo);
+            int nextPosition = m5->getPosition().x + (10 + m5->getContentSize().width) * direction5;
+            if ( nextPosition > maxEdgeX ) {
+                direction5 = -1;
+                for ( auto &m : _m5List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);   
+                }
+                _m5List.reverse();
+                break;
+            } 
+            if ( nextPosition < minEdgeX ) {
+                direction5 = 1;
+                for ( auto &m : _m5List )
+                {
+                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
+                    m->runAction(moveDown);
+                }
+                _m5List.reverse();
+                break;
+            }
         }
     }
     ++altFrames5;
@@ -740,6 +776,6 @@ bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event)
     projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));
 
 
-    cocos2d::log("touch began");
+    // cocos2d::log("touch began");
     return true;
 }
