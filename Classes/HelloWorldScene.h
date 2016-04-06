@@ -29,13 +29,13 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     
-    void row5Shoot(float dt);
-    void row4Shoot(float dt);
-    void row3Shoot(float dt);
-    void row2Shoot(float dt);
-    void row1Shoot(float dt);
+    void row5Move(float dt);
+    void row4Move(float dt);
+    void row3Move(float dt);
+    void row2Move(float dt);
+    void row1Move(float dt);
 
-    void row1Fire(float dt);
+    void fireMissiles(float dt);
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
@@ -63,6 +63,7 @@ private:
 	cocos2d::Vector<cocos2d::Sprite*> _m1List;
 
 	int _nextShipLaser;
+	int score;
 	
 	int direction5;
 	int direction4;
