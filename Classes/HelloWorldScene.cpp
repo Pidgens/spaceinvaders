@@ -77,7 +77,7 @@ bool HelloWorld::init()
             monster1->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/1.2));
         }
         this->addChild(monster1);
-
+        monster1->setTag(i);
         auto monsterSize = monster1->getContentSize();
         auto physicsBody = PhysicsBody::createBox(Size(monsterSize.width, monsterSize.height),
             PhysicsMaterial(0.1f, 1.0f, 0.0f));
@@ -97,7 +97,7 @@ bool HelloWorld::init()
         monster2->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         
         this->addChild(monster2);
-
+        monster2->setTag(i+11);
         auto monsterSize2 = monster2->getContentSize();
         auto physicsBody2 = PhysicsBody::createBox(Size(monsterSize2.width, monsterSize2.height),
             PhysicsMaterial(0.1f, 1.0f, 0.0f));
@@ -118,7 +118,7 @@ bool HelloWorld::init()
         monster3->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         
         this->addChild(monster3);
-
+        monster3->setTag(i+22);
         auto monsterSize = monster3->getContentSize();
         auto physicsBody = PhysicsBody::createBox(Size(monsterSize.width, monsterSize.height),
             PhysicsMaterial(0.1f, 1.0f, 0.0f));
@@ -137,7 +137,7 @@ bool HelloWorld::init()
         float height = 1.5;
         monster4 = Sprite::create("invaderBframe1.png");
         monster4->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
-        
+        monster4->setTag(i+33);
         this->addChild(monster4);
 
         auto monsterSize = monster4->getContentSize();
@@ -158,7 +158,7 @@ bool HelloWorld::init()
         float height = 1.6;
         monster5 = Sprite::create("invaderBframe1.png");
         monster5->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
-        
+        monster5->setTag(i+44);
         this->addChild(monster5);
 
         auto monsterSize = monster5->getContentSize();
@@ -299,21 +299,24 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
     auto nodeB = contact.getShapeB()->getBody()->getNode();
 
-    if ( ( nodeA->getTag() == spaceship->getTag() ) || (nodeB->getTag() == spaceship->getTag() ) ) 
+    if ( (nodeB->getTag() == spaceship->getTag() ) ) 
     {
         CCLOG("GAME IS OVERRRR");
         Director::getInstance()->end();
         Director::getInstance()->purgeCachedData();
         return true;
     }
-    if ( !(nodeA->getTag() > 100 ) & !( nodeB->getTag() > 100 ) )
+    if ( !( nodeB->getTag() > 100 ) )
     {
         // score + 10
         score = score + 10;
         std::stringstream ss;
         ss << score;
         label->setString(ss.str());
+        this->removeChildByTag(nodeB->getTag());
+        
     }
+
 
 
     nodeA->removeFromParentAndCleanup(true);
