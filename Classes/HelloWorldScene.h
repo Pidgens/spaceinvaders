@@ -29,8 +29,14 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     
-    void row1Shoot(float dt);
+    void row5Shoot(float dt);
+    void row4Shoot(float dt);
+    void row3Shoot(float dt);
     void row2Shoot(float dt);
+    void row1Shoot(float dt);
+
+    void row1Fire(float dt);
+
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
@@ -57,6 +63,25 @@ private:
 	cocos2d::Vector<cocos2d::Sprite*> _m1List;
 
 	int _nextShipLaser;
+	
+	int direction5;
+	int direction4;
+	int direction3;
+	int direction2;
+	int direction1;
+	int f1 = 222;
+	int f2 = 222;
+	int f3 = 222;
+	int f4 = 222;
+	int f5 = 222;
+
+	int altFrames5;
+	int altFrames4;
+	int altFrames3;
+	int altFrames2;
+	int altFrames1;
+	int randVal;
+	bool playerIsDead = false;
 
 	float _shipPointsPerSecY;
 
