@@ -50,6 +50,8 @@ public:
 
 private:
 	cocos2d::Label *label;
+	// cocos2d::Label *endScreen;
+
 	cocos2d::Sprite *spaceship;	
 	cocos2d::Sprite *monster1;
 	cocos2d::Sprite *monster2;

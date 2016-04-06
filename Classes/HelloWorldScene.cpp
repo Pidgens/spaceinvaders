@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+
 USING_NS_CC;
 
 // collision layer
@@ -47,14 +48,15 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
     //////////////////////////////
     // 1. super init first
     if ( !Layer::init() )
     {
         return false;
     }
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     
     label = Label::createWithSystemFont("SCORE: ", "fonts/Marker Felt.ttf", 12);
@@ -298,10 +300,47 @@ void HelloWorld::checkForDown(float f)
 {
     if (goDown)
     {
+        if ( (direction2 == 1 ) | (direction1 == 1) )
+        {
+            direction1=-1;
+            direction2=-1;
+            direction3=-1;
+            direction4=-1;
+            direction5=-1;
+        }
+        else 
+        {
+            direction1=1;
+            direction2=1;
+            direction3=1;
+            direction4=1;
+            direction5=1;
+        }
+        _m1List.reverse();
+        _m2List.reverse();
+        _m3List.reverse();
+        _m4List.reverse();
+        _m5List.reverse();
+        goDown = false;
         for (auto m : _m5List)
         {
             m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
-            goDown = false;
+        }
+        for (auto m : _m4List)
+        {
+            m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
+        }
+        for (auto m : _m3List)
+        {
+            m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
+        }
+        for (auto m : _m2List)
+        {
+            m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
+        }
+        for (auto m : _m1List)
+        {
+            m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
         }
     }
 }
@@ -311,11 +350,18 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
     auto nodeB = contact.getShapeB()->getBody()->getNode();
 
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
     if ( (nodeB->getTag() == spaceship->getTag() ) ) 
     {
-        CCLOG("GAME IS OVERRRR");
-        Director::getInstance()->end();
-        Director::getInstance()->purgeCachedData();
+        std::stringstream st;
+        st << score;
+
+        Device::setAccelerometerEnabled(false);
+        Director::getInstance()->pause();
+        label->setString("GAME OVER, YOUR SCORE IS: " + st.str());
+
         return true;
     }
     if ( !( nodeB->getTag() > 100 ) )
@@ -325,20 +371,28 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
         ss << score;
         label->setString("SCORE: " + ss.str());
         this->removeChildByTag(nodeB->getTag());
+        CCLOG("%d" , score);
+        if (score == 550) 
+        {
+            label->setPosition(Vec2( origin.x + visibleSize.width/2 , visibleSize.height /2 ) );
+            label->setString("YOU WIN!!!! YOUR SCORE IS: " +ss.str());
+            Device::setAccelerometerEnabled(false);
+            Director::getInstance()->pause();
+
+        }
         
     }
     nodeA->removeFromParentAndCleanup(true);
     nodeB->removeFromParentAndCleanup(true);
-
-
-    CCLOG("COLLISION OCCURED");
     return true;
 }   
 
 void HelloWorld::fireMissiles(float dt)
 {
-    randVal = rand()%11;
-    int i = 1;
+    srand(time(0));
+    randVal = rand() % 11;
+    CCLOG("%d", randVal);
+    int i = 0;
     for ( auto m : _m1List ) 
     {
         if (randVal == i) 
@@ -366,8 +420,9 @@ void HelloWorld::fireMissiles(float dt)
         }
         ++i;
     }
-    randVal = rand()%11;
-    i = 1;
+    randVal = rand() % 11;
+    CCLOG("%d", randVal);
+    i = 0;
     for ( auto m : _m2List ) 
     {
         if (randVal == i) 
@@ -396,8 +451,8 @@ void HelloWorld::fireMissiles(float dt)
         }
         ++i;
     }
-    randVal = rand()%11;
-    i = 1;
+    randVal = rand() % 11;
+    i = 0;
     for ( auto m : _m3List ) 
     {
         if (randVal == i) 
@@ -425,15 +480,15 @@ void HelloWorld::fireMissiles(float dt)
         }
         ++i;
     }
-    randVal = rand()%11;
-    i = 1;
+    randVal = rand() % 11;
+    i = 0;
     for ( auto m : _m4List ) 
     {
         if (randVal == i) 
         {
             if ( getChildByTag(m->getTag()) ) 
             {
-                auto projectile = Sprite::create("enemy_missle.png");
+                auto projectile = Sprite::create("enemy_ray.png");
                 projectile->setPosition(m->getPosition());
                 this->addChild(projectile);
 
@@ -454,15 +509,15 @@ void HelloWorld::fireMissiles(float dt)
         }
         ++i;
     }
-    randVal = rand()%11;
-    i = 1;
+    randVal = rand() % 11;
+    i = 0;
     for ( auto m : _m5List ) 
     {
         if (randVal == i) 
         {
             if ( getChildByTag(m->getTag()) ) 
             {
-            auto projectile = Sprite::create("enemy_missle.png");
+            auto projectile = Sprite::create("enemy_ray.png");
             projectile->setPosition(m->getPosition());
             this->addChild(projectile);
 
@@ -513,15 +568,9 @@ void HelloWorld::row1Move(float dt)
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction1 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction1;
-            if ( nextPosition > maxEdgeX ) {
-                direction1 = -1;
-                _m1List.reverse();
-                goDown = true;
-                break;
-            } 
-            if ( nextPosition < minEdgeX ) {
-                direction1 = 1;
-                _m1List.reverse();
+            if ( (nextPosition > maxEdgeX ) | ( nextPosition < minEdgeX )) 
+            {
+                goReverse = true;
                 goDown = true;
                 break;
             }
@@ -556,15 +605,9 @@ void HelloWorld::row2Move(float dt)
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction2 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction2;
-            if ( nextPosition > maxEdgeX ) {
-                direction2 = -1;
-                _m2List.reverse();
-                goDown = true;
-                break;
-            } 
-            if ( nextPosition < minEdgeX ) {
-                direction2 = 1;
-                _m2List.reverse();
+            if ( (nextPosition > maxEdgeX ) | ( nextPosition < minEdgeX )) 
+            {
+                goReverse = true;
                 goDown = true;
                 break;
             }
@@ -598,15 +641,9 @@ void HelloWorld::row3Move(float dt)
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction3 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction3;
-            if ( nextPosition > maxEdgeX ) {
-                direction3 = -1;
-                _m3List.reverse();
-                goDown = true;
-                break;
-            } 
-            if ( nextPosition < minEdgeX ) {
-                direction3 = 1;
-                _m3List.reverse();
+            if ( (nextPosition > maxEdgeX ) | ( nextPosition < minEdgeX )) 
+            {
+                goReverse = true;
                 goDown = true;
                 break;
             }
@@ -641,15 +678,9 @@ void HelloWorld::row4Move(float dt)
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction4 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction4;
-            if ( nextPosition > maxEdgeX ) {
-                direction4 = -1;
-                _m4List.reverse();
-                goDown = true;
-                break;
-            } 
-            if ( nextPosition < minEdgeX ) {
-                direction4 = 1;
-                _m4List.reverse();
+            if ( (nextPosition > maxEdgeX ) | ( nextPosition < minEdgeX )) 
+            {
+                goReverse = true;
                 goDown = true;
                 break;
             }
@@ -685,15 +716,9 @@ void HelloWorld::row5Move(float dt)
             auto moveTo = MoveTo::create(1, Vec2(m5->getPosition().x + 10 * direction5 , m5->getPosition().y));
             m5->runAction(moveTo);
             int nextPosition = m5->getPosition().x + (10 + m5->getContentSize().width) * direction5;
-            if ( nextPosition > maxEdgeX ) {
-                direction5 = -1;
-                _m5List.reverse();
-                goDown = true;
-                break;
-            } 
-            if ( nextPosition < minEdgeX ) {
-                direction5 = 1;
-                _m5List.reverse();
+            if ( (nextPosition > maxEdgeX ) | ( nextPosition < minEdgeX )) 
+            {
+                goReverse = true;
                 goDown = true;
                 break;
             }
