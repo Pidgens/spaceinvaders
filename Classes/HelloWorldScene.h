@@ -46,7 +46,7 @@ public:
 
 	bool onContactBegan(cocos2d::PhysicsContact &contact);
 
-	// void update(float dt);
+	void checkForDown(float dt);
 
 private:
 	cocos2d::Label *label;
@@ -82,7 +82,8 @@ private:
 	int altFrames2;
 	int altFrames1;
 	int randVal;
-	bool playerIsDead = false;
+	bool goDown = false;
+	bool goReverse = false;
 
 	float _shipPointsPerSecY;
 

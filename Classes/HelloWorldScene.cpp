@@ -30,7 +30,7 @@ Scene* HelloWorld::createScene()
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2(0,0));
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
@@ -93,7 +93,7 @@ bool HelloWorld::init()
     {
 
         float height = 1.3;
-        monster2 = Sprite::create("invaderAframe1.png");
+        monster2 = Sprite::create("invaderBframe1.png");
         monster2->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         
         this->addChild(monster2);
@@ -114,7 +114,7 @@ bool HelloWorld::init()
     {
         
         float height = 1.4;
-        monster3 = Sprite::create("invaderAframe1.png");
+        monster3 = Sprite::create("invaderBframe1.png");
         monster3->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         
         this->addChild(monster3);
@@ -135,7 +135,7 @@ bool HelloWorld::init()
     {
         
         float height = 1.5;
-        monster4 = Sprite::create("invaderBframe1.png");
+        monster4 = Sprite::create("invaderAframe1.png");
         monster4->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         monster4->setTag(i+33);
         this->addChild(monster4);
@@ -156,7 +156,7 @@ bool HelloWorld::init()
     {
         
         float height = 1.6;
-        monster5 = Sprite::create("invaderBframe1.png");
+        monster5 = Sprite::create("invaderAframe1.png");
         monster5->setPosition(Vec2(visibleSize.width/10 + origin.x + i*15, visibleSize.height/height));
         monster5->setTag(i+44);
         this->addChild(monster5);
@@ -289,9 +289,21 @@ bool HelloWorld::init()
 
     // for shooting
     this->schedule(schedule_selector(HelloWorld::fireMissiles), 3);
-
+    this->schedule(schedule_selector(HelloWorld::checkForDown), 1);
 
     return true;
+}
+
+void HelloWorld::checkForDown(float f) 
+{
+    if (goDown)
+    {
+        for (auto m : _m5List)
+        {
+            m->setPosition(Vec2(m->getPosition().x, m->getPosition().y - 10));
+            goDown = false;
+        }
+    }
 }
 
 // for collision
@@ -308,11 +320,10 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
     }
     if ( !( nodeB->getTag() > 100 ) )
     {
-        // score + 10
         score = score + 10;
         std::stringstream ss;
         ss << score;
-        label->setString(ss.str());
+        label->setString("SCORE: " + ss.str());
         this->removeChildByTag(nodeB->getTag());
         
     }
@@ -351,10 +362,6 @@ void HelloWorld::fireMissiles(float dt)
                 auto actionMove = MoveTo::create(6.0f, realDest);
                 auto actionRemove = RemoveSelf::create();
                 projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));                   
-            }
-            else 
-            {
-                CCLOG("ADSJKADHKSHADJKSHKJDSAKD");
             }
         }
         ++i;
@@ -508,22 +515,14 @@ void HelloWorld::row1Move(float dt)
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction1;
             if ( nextPosition > maxEdgeX ) {
                 direction1 = -1;
-                for ( auto &m : _m1List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 10 ));
-                    m->runAction(moveDown);   
-                }
                 _m1List.reverse();
+                goDown = true;
                 break;
             } 
             if ( nextPosition < minEdgeX ) {
                 direction1 = 1;
-                for ( auto &m : _m1List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m1List.reverse();
+                goDown = true;
                 break;
             }
         }
@@ -548,33 +547,25 @@ void HelloWorld::row2Move(float dt)
 
             if (altFrames2 % 2 == 1)
             {
-                m->setTexture("invaderAframe2.png");
+                m->setTexture("invaderBframe2.png");
             } 
             else 
             {
-                m->setTexture("invaderAframe1.png");    
+                m->setTexture("invaderBframe1.png");    
             }
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction2 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction2;
             if ( nextPosition > maxEdgeX ) {
                 direction2 = -1;
-                for ( auto &m : _m2List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m2List.reverse();
+                goDown = true;
                 break;
             } 
             if ( nextPosition < minEdgeX ) {
                 direction2 = 1;
-                for ( auto &m : _m2List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m2List.reverse();
+                goDown = true;
                 break;
             }
         }
@@ -598,33 +589,25 @@ void HelloWorld::row3Move(float dt)
 
             if (altFrames3 % 2 == 1)
             {
-                m->setTexture("invaderAframe2.png");
+                m->setTexture("invaderBframe2.png");
             } 
             else 
             {
-                m->setTexture("invaderAframe1.png");    
+                m->setTexture("invaderBframe1.png");    
             }
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction3 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction3;
             if ( nextPosition > maxEdgeX ) {
                 direction3 = -1;
-                for ( auto &m : _m3List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m3List.reverse();
+                goDown = true;
                 break;
             } 
             if ( nextPosition < minEdgeX ) {
                 direction3 = 1;
-                for ( auto &m : _m3List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m3List.reverse();
+                goDown = true;
                 break;
             }
         }
@@ -649,34 +632,25 @@ void HelloWorld::row4Move(float dt)
         {
             if (altFrames4 % 2 == 1)
             {
-                m->setTexture("invaderBframe2.png");
+                m->setTexture("invaderAframe2.png");
             } 
             else 
             {
-                m->setTexture("invaderBframe1.png");    
+                m->setTexture("invaderAframe1.png");    
             }
             auto moveTo = MoveTo::create(1, Vec2(m->getPosition().x + 10 * direction4 , m->getPosition().y));
             m->runAction(moveTo);
             int nextPosition = m->getPosition().x + (10 + m->getContentSize().width) * direction4;
             if ( nextPosition > maxEdgeX ) {
                 direction4 = -1;
-                for ( auto &m : _m4List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
-
                 _m4List.reverse();
+                goDown = true;
                 break;
             } 
             if ( nextPosition < minEdgeX ) {
                 direction4 = 1;
-                for ( auto &m : _m4List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m4List.reverse();
+                goDown = true;
                 break;
             }
         }
@@ -702,33 +676,25 @@ void HelloWorld::row5Move(float dt)
 
             if (altFrames5 % 2 == 1)
             {
-                m5->setTexture("invaderBframe2.png");
+                m5->setTexture("invaderAframe2.png");
             } 
             else 
             {
-                m5->setTexture("invaderBframe1.png");    
+                m5->setTexture("invaderAframe1.png");    
             }
             auto moveTo = MoveTo::create(1, Vec2(m5->getPosition().x + 10 * direction5 , m5->getPosition().y));
             m5->runAction(moveTo);
             int nextPosition = m5->getPosition().x + (10 + m5->getContentSize().width) * direction5;
             if ( nextPosition > maxEdgeX ) {
                 direction5 = -1;
-                for ( auto &m : _m5List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);   
-                }
                 _m5List.reverse();
+                goDown = true;
                 break;
             } 
             if ( nextPosition < minEdgeX ) {
                 direction5 = 1;
-                for ( auto &m : _m5List )
-                {
-                    auto moveDown = MoveTo::create(1, Vec2(m->getPosition().x , m->getPosition().y - 5 ));
-                    m->runAction(moveDown);
-                }
                 _m5List.reverse();
+                goDown = true;
                 break;
             }
         }
