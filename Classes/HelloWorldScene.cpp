@@ -184,20 +184,16 @@ bool HelloWorld::init()
 
     // add "HelloWorld" splash screen"
     spaceship = Sprite::create("spaceship.png");
-
+    spaceship->setTag(100);
     // position the sprite on the center of the screen
     spaceship->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/8 + origin.y));
 
     auto ssBody = PhysicsBody::createBox( spaceship->getContentSize(), PhysicsMaterial(0,1,0));
     ssBody->setGravityEnable(false);
-    // ssBody->setCategoryBitmask(0x02);
-    // ssBody->setCollisionBitmask((int) PhysicsCategorySS::None );
-    // ssBody->setContactTestBitmask( (int) PhysicsCategorySS::Projectile );
-    // ssBody->setCategoryBitmask( (int) PhysicsCategorySS:: Spaceship );
+    ssBody->setCollisionBitmask((int) PhysicsCategorySS::None );
+    ssBody->setContactTestBitmask( (int) PhysicsCategorySS::Projectile );
+    ssBody->setCategoryBitmask( (int) PhysicsCategorySS:: Spaceship );
     spaceship->setPhysicsBody(ssBody);
-    // spaceship->getContactTestBitmask(true);
-
-    // add the sprite as a child to this layer
     this->addChild(spaceship, 1);
 
 
@@ -205,12 +201,10 @@ bool HelloWorld::init()
 
     // touch screen listener
     auto touchListener = EventListenerTouchOneByOne::create();
-
     touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
     touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
     touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchMoved, this);
     touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchCancelled, this);
-
    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
    // Turn on accelerometer
@@ -219,18 +213,11 @@ bool HelloWorld::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(acc_listener, this);
 
 
-    auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
-    
-    // edgeBody->setContactTestBitmask(true);
-    
+    auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);    
     auto edgeNode = Node::create();
     edgeNode->setPosition(Point( visibleSize.width/2 + origin.x, visibleSize.height / 2 + origin.y));
     edgeBody->setCollisionBitmask(2);
     edgeNode->setPhysicsBody(edgeBody);
-    // edgeBody->setCategoryBitmask(0x01);
-
-    // edgeNode->setCollisionBitmask(2);
-    // edgeNode->setContactTestBitmask(true);
     this->addChild(edgeNode);
 
     // collision
@@ -258,10 +245,19 @@ bool HelloWorld::onContactBegan(cocos2d::PhysicsContact &contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
     auto nodeB = contact.getShapeB()->getBody()->getNode();
 
+    if ( ( nodeA->getTag() == spaceship->getTag() ) || (nodeB->getTag() == spaceship->getTag() ) ) 
+    {
+        CCLOG("GAME IS OVERRRR");
+        Director::getInstance()->end();
+        Director::getInstance()->purgeCachedData();
+        return true;
+    }
 
 
     nodeA->removeFromParentAndCleanup(true);
     nodeB->removeFromParentAndCleanup(true);
+
+
     CCLOG("COLLISION OCCURED");
     return true;
 }   
@@ -294,6 +290,111 @@ void HelloWorld::row1Fire(float dt)
         }
         ++i;
     }
+    randVal = rand()%11;
+    i = 1;
+    for ( auto m : _m2List ) 
+    {
+        if (randVal == i) 
+        {
+            auto projectile = Sprite::create("enemy_missle.png");
+            projectile->setPosition(m->getPosition());
+            this->addChild(projectile);
+
+            auto realDest = Vec2(m->getPosition().x, -500);
+
+            auto projectileSize = projectile->getContentSize();
+            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+            physicsBody->setDynamic(true); 
+            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile);
+            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+            projectile->setPhysicsBody(physicsBody);
+
+            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionRemove = RemoveSelf::create();
+            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+        }
+        ++i;
+    }
+    randVal = rand()%11;
+    i = 1;
+    for ( auto m : _m3List ) 
+    {
+        if (randVal == i) 
+        {
+            auto projectile = Sprite::create("enemy_missle.png");
+            projectile->setPosition(m->getPosition());
+            this->addChild(projectile);
+
+            auto realDest = Vec2(m->getPosition().x, -500);
+
+            auto projectileSize = projectile->getContentSize();
+            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+            physicsBody->setDynamic(true); 
+            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile);
+            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+            projectile->setPhysicsBody(physicsBody);
+
+            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionRemove = RemoveSelf::create();
+            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+        }
+        ++i;
+    }
+    randVal = rand()%11;
+    i = 1;
+    for ( auto m : _m4List ) 
+    {
+        if (randVal == i) 
+        {
+            auto projectile = Sprite::create("enemy_missle.png");
+            projectile->setPosition(m->getPosition());
+            this->addChild(projectile);
+
+            auto realDest = Vec2(m->getPosition().x, -500);
+
+            auto projectileSize = projectile->getContentSize();
+            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+            physicsBody->setDynamic(true); 
+            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile);
+            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+            projectile->setPhysicsBody(physicsBody);
+
+            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionRemove = RemoveSelf::create();
+            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+        }
+        ++i;
+    }
+    randVal = rand()%11;
+    i = 1;
+    for ( auto m : _m5List ) 
+    {
+        if (randVal == i) 
+        {
+            auto projectile = Sprite::create("enemy_missle.png");
+            projectile->setPosition(m->getPosition());
+            this->addChild(projectile);
+
+            auto realDest = Vec2(m->getPosition().x, -500);
+
+            auto projectileSize = projectile->getContentSize();
+            auto physicsBody = PhysicsBody::createCircle(projectileSize.width/2 );
+            physicsBody->setDynamic(true); 
+            physicsBody->setCategoryBitmask((int)PhysicsCategorySS::Projectile);
+            physicsBody->setCollisionBitmask((int)PhysicsCategorySS::None);
+            physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
+            projectile->setPhysicsBody(physicsBody);
+
+            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionRemove = RemoveSelf::create();
+            projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
+        }
+        ++i;
+    }
+
 
 }
 
