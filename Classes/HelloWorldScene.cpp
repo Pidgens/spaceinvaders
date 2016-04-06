@@ -281,14 +281,14 @@ bool HelloWorld::init()
 
 
     // for movement schedule
-    this->schedule(schedule_selector(HelloWorld::row5Shoot), 1); 
-    this->schedule(schedule_selector(HelloWorld::row4Shoot), 1); 
-    this->schedule(schedule_selector(HelloWorld::row3Shoot), 1); 
-    this->schedule(schedule_selector(HelloWorld::row2Shoot), 1); 
-    this->schedule(schedule_selector(HelloWorld::row1Shoot), 1); 
+    this->schedule(schedule_selector(HelloWorld::row5Move), 1); 
+    this->schedule(schedule_selector(HelloWorld::row4Move), 1); 
+    this->schedule(schedule_selector(HelloWorld::row3Move), 1); 
+    this->schedule(schedule_selector(HelloWorld::row2Move), 1); 
+    this->schedule(schedule_selector(HelloWorld::row1Move), 1); 
 
     // for shooting
-    this->schedule(schedule_selector(HelloWorld::row1Fire), 2);
+    this->schedule(schedule_selector(HelloWorld::fireMissiles), 3);
 
 
     return true;
@@ -346,7 +346,7 @@ void HelloWorld::fireMissiles(float dt)
             physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
             projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(8.0f, realDest);
+            auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
         }
@@ -372,7 +372,7 @@ void HelloWorld::fireMissiles(float dt)
             physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
             projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
         }
@@ -398,7 +398,7 @@ void HelloWorld::fireMissiles(float dt)
             physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
             projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
         }
@@ -424,7 +424,7 @@ void HelloWorld::fireMissiles(float dt)
             physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
             projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
         }
@@ -450,7 +450,7 @@ void HelloWorld::fireMissiles(float dt)
             physicsBody->setContactTestBitmask((int)PhysicsCategorySS::Spaceship);
             projectile->setPhysicsBody(physicsBody);
 
-            auto actionMove = MoveTo::create(2.0f, realDest);
+            auto actionMove = MoveTo::create(6.0f, realDest);
             auto actionRemove = RemoveSelf::create();
             projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));   
         }
@@ -732,7 +732,7 @@ bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event)
 
 
     // remove the projectile
-    auto actionMove = MoveTo::create(2.0f, realDest);
+    auto actionMove = MoveTo::create(5.0f, realDest);
     auto actionRemove = RemoveSelf::create();
     projectile->runAction(Sequence::create(actionMove,actionRemove, nullptr));
 
